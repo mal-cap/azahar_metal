@@ -190,21 +190,6 @@ if (BUNDLE_TARGET_EXECUTE)
                 symlink_safe_copy("${lib_file}" "${lib_dir}")
             endforeach()
         endif()
-
-        # Add libs directory to executable rpath where applicable.
-        if (APPLE)
-            execute_process(COMMAND install_name_tool -add_rpath "@loader_path/libs" "${executable_path}"
-                            RESULT_VARIABLE install_name_tool_result)
-            if (NOT install_name_tool_result EQUAL "0")
-                message(FATAL_ERROR "install_name_tool failed: ${install_name_tool_result}")
-            endif()
-        elseif (UNIX)
-            execute_process(COMMAND patchelf --set-rpath '$ORIGIN/../libs' "${executable_path}"
-                            RESULT_VARIABLE patchelf_result)
-            if (NOT patchelf_result EQUAL "0")
-                message(FATAL_ERROR "patchelf failed: ${patchelf_result}")
-            endif()
-        endif()
     endfunction()
 
     # --- Root bundling logic ---
